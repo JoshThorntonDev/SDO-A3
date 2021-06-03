@@ -1,0 +1,8 @@
+apiVersion: v2
+name: todo
+description: A Helm chart for ToDoNow
+
+type: application
+
+version: 0.1.0
+

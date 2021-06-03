@@ -1,0 +1,2 @@
+image: 403120870625.dkr.ecr.us-east-1.amazonaws.com/rmit-assignment3-container-repo:a950d3b4725ba29c0f2eeac9be76ad2b2f008c73
+dbendpoint: localhost

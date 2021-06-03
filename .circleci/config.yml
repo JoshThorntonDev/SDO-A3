@@ -173,6 +173,36 @@ jobs:
           root: ./
           paths:
             - artifacts
+  deploy-test:
+    docker:
+      - image: cimg/base:2021.05
+    environment:
+      ENV: test
+    steps:
+      - attach_workspace:
+          at: ./
+      - setup-cd
+
+      - run:
+          name: Deploy infrastructure
+          command: |
+            cd artifacts/infra
+            make init
+            make up
+
+            # Grab info required to create the db connection string
+            USERNAME=$(terraform output -raw db_user)
+            PASSWORD=$(terraform output -raw db_pass)
+            DNS_NAME=$(terraform output -raw db_endpoint)
+
+            # Create the db connection string and save it for later
+            echo "mongodb://$USERNAME:$PASSWORD@$DNS_NAME" > ../../db_connection_string.txt
+      - run:
+          name: Deploy app
+          command: |
+            helm upgrade todo-app artifacts/*.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbendpoint=$(cat db_connection_string.txt)
+
+      - smoke-test
 
 workflows:
   version: 2
@@ -185,3 +215,9 @@ workflows:
       - package:
           requires:
             - integration-test
+          filters:
+            branches:
+              only: master
+      - deploy-test:
+          requires:
+            - package
