@@ -173,6 +173,15 @@ jobs:
           root: ./
           paths:
             - artifacts
+  deploy-test:
+    docker:
+      - image: cimg/base:2021.05
+    environment:
+      ENV: test
+    steps:
+      - attach_workspace:
+          at: ./
+      - setup-cd
 
 workflows:
   version: 2
