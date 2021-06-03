@@ -197,6 +197,10 @@ jobs:
 
             # Create the db connection string and save it for later
             echo "mongodb://$USERNAME:$PASSWORD@$DNS_NAME" > ../../db_connection_string.txt
+      - run:
+          name: Deploy app
+          command: |
+            helm upgrade todo-app artifacts/*.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbendpoint=$(cat db_connection_string.txt)
 
 workflows:
   version: 2
