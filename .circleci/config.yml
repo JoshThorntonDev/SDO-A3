@@ -213,3 +213,6 @@ workflows:
       - package:
           requires:
             - integration-test
+      - deploy-test:
+          requires:
+            - package
