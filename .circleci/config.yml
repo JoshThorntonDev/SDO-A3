@@ -192,9 +192,9 @@ jobs:
             USERNAME=$(terraform output -raw db_user)
             PASSWORD=$(terraform output -raw db_pass)
             DNS_NAME=$(terraform output -raw db_endpoint)
-
+            PORT=27017
             # Create the db connection string and save it for later
-            echo "mongodb://$USERNAME:$PASSWORD@$DNS_NAME" > ../../db_connection_string.txt
+            echo "mongodb://$USERNAME:$PASSWORD@$DNS_NAME:$PORT" > ../../db_connection_string.txt
       - run:
           name: Deploy app
           command: |
