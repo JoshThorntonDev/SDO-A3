@@ -200,7 +200,7 @@ jobs:
           command: |
             helm upgrade todo-app artifacts/*.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbendpoint=$(cat db_connection_string.txt)
 
-      - smoke-test
+     # - smoke-test
       
 
 workflows:
