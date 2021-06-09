@@ -121,7 +121,7 @@ jobs:
             echo $ENDPOINT
             cd src
             npm install
-            npm run test-e2e
+            npm run test-e2e -- DB_URL=mongodb://testuser:TestPass@todo-db-test-docdb-cluster.cluster-c2t0e4cixdfe.us-east-1.docdb.amazonaws.com:27017
 
   package:
     machine: true
