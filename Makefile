@@ -35,6 +35,7 @@ kube-config:
 
 namespace-up:
 	kubectl create namespace test
+	kubectl create namespace production
 
 namespace-down:
 
