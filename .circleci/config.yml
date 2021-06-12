@@ -51,6 +51,24 @@ commands:
               exit 1
             fi
 
+  deploy-infra:
+    steps:
+     - run:
+        name: Deploy infrastructure
+        command: |
+            cd artifacts/infra
+            make init
+            make up
+
+            # Grab info required to create the db connection string
+            USERNAME=$(terraform output -raw db_user)
+            PASSWORD=$(terraform output -raw db_pass)
+            DNS_NAME=$(terraform output -raw db_endpoint)
+            PORT=27017
+            # Create the db connection string and save it for later
+            echo "mongodb://$USERNAME:$PASSWORD@$DNS_NAME:$PORT" > ../../db_connection_string.txt
+
+
 jobs:
   build:
     docker:
@@ -214,9 +232,6 @@ workflows:
       - package:
           requires:
             - integration-test
-          filters:
-            branches:
-              only: master
       - deploy-test:
           requires:
             - package
