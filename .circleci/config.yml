@@ -238,4 +238,8 @@ workflows:
       - e2e:
           requires:
             - deploy-test
+      - approval:
+          type: approval
+          requires:
+            - e2e
       
