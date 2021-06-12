@@ -38,7 +38,8 @@ namespace-up:
 	kubectl create namespace production
 
 namespace-down:
-
+	kubectl delete namespace test
+	kubectl delete namespace production
 ########
 # SSH
 ########
