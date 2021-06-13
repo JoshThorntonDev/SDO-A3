@@ -199,27 +199,27 @@ jobs:
           at: ./
       - setup-cd
 
-      - run:
-          name: Deploy infrastructure
-          command: |
-            cd artifacts/infra
-            make init
-            make up
-
-            # Grab info required to create the db connection string
-            USERNAME=$(terraform output -raw db_user)
-            PASSWORD=$(terraform output -raw db_pass)
-            DNS_NAME=$(terraform output -raw db_endpoint)
-            PORT=27017
-            # Create the db connection string and save it for later
-            echo "mongodb://$USERNAME:$PASSWORD@$DNS_NAME:$PORT" > ../../db_connection_string.txt
+      - deploy-infra
       - run:
           name: Deploy app
           command: |
             helm upgrade todo-app artifacts/*.tgz -i -n test --wait --set image=$(cat artifacts/image.txt),dbendpoint=$(cat db_connection_string.txt)
 
       - smoke-test
-      
+
+  deploy-production:
+    docker:
+      - image: cimg/base:2021.05
+    environment:
+      ENV: production
+    steps:
+      - attach_workspace:
+          at: ./
+      - deploy-infra
+      - run:
+          name: Deploy app
+          command: |
+            helm upgrade todo-app artifacts/*.tgz -i -n production --wait --set image=$(cat artifacts/image.txt),dbendpoint=$(cat db_connection_string.txt)
 
 workflows:
   version: 2
