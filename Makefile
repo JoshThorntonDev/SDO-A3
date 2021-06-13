@@ -36,10 +36,12 @@ kube-config:
 namespace-up:
 	kubectl create namespace test
 	kubectl create namespace production
+	kubectl create namespace cloudwatch
 
 namespace-down:
 	kubectl delete namespace test
 	kubectl delete namespace production
+	kubectl delete namespace cloudwatch
 ########
 # SSH
 ########
