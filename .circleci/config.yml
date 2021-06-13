@@ -223,6 +223,19 @@ jobs:
             helm upgrade todo-app artifacts/*.tgz -i -n production --wait --set image=$(cat artifacts/image.txt),dbendpoint=$(cat db_connection_string.txt)
       - smoke-test:
           envName: "production"
+  
+  enable-logging:
+    docker:
+      - image: cimg/base:2021.05
+    steps:
+      - attach_workspace:
+          at: ./
+      - setup-cd
+      - run:
+          name: Create configmap
+          command: |
+            kubectl create configmap cluster-info --from-literal=cluster.name=rmit.k8s.local --from-literal=logs.region=us-east-1 -n amazon-cloudwatch
+    
 
 workflows:
   version: 2
@@ -235,9 +248,6 @@ workflows:
       - package:
           requires:
             - integration-test
-          filters:
-            branches:
-              only: master
       - deploy-test:
           requires:
             - package
