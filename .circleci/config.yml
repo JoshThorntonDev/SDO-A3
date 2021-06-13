@@ -215,6 +215,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
+      - setup-cd
       - deploy-infra
       - run:
           name: Deploy app
