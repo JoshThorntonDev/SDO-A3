@@ -268,4 +268,7 @@ workflows:
       - deploy-production:
           requires:
             - approval
+      - enable-logging:
+          requires:
+            - deploy-production
       
