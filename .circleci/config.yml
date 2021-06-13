@@ -223,6 +223,26 @@ jobs:
             helm upgrade todo-app artifacts/*.tgz -i -n production --wait --set image=$(cat artifacts/image.txt),dbendpoint=$(cat db_connection_string.txt)
       - smoke-test:
           envName: "production"
+  
+  enable-logging:
+    docker:
+      - image: cimg/base:2021.05
+    steps:
+      - attach_workspace:
+          at: ./
+      - setup-cd
+      - run:
+          name: Create configmap
+          command: |
+            kubectl create configmap cluster-info --from-literal=cluster.name=rmit.k8s.local --from-literal=logs.region=us-east-1 -n amazon-cloudwatch
+      - run:
+          name: Download fluentd
+          command: |
+            wget https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/fluentd/fluentd.yaml
+      - run:
+          name: Apply fluentd
+          command: |
+            kubectl apply -f fluentd.yaml
 
 workflows:
   version: 2
@@ -251,4 +271,7 @@ workflows:
       - deploy-production:
           requires:
             - approval
+      - enable-logging:
+          requires:
+            - deploy-production
       
