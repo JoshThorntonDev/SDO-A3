@@ -242,4 +242,7 @@ workflows:
           type: approval
           requires:
             - e2e
+      - deploy-production:
+          requires:
+            - approval
       
