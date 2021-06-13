@@ -239,7 +239,10 @@ jobs:
           name: Download fluentd
           command: |
             wget https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/fluentd/fluentd.yaml
-    
+      - run:
+          name: Apply fluentd
+          command: |
+            kubectl apply -f fluentd.yaml
 
 workflows:
   version: 2
